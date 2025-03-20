@@ -11,19 +11,24 @@ A collection of handy tools for developers built with Rust and Slint.
 - Convert millisecond timestamp to human-readable date time
 - Get current Unix timestamp
 - Get current millisecond timestamp
+- Support both input and output in a clear format
 
 ### JSON Formatter
 - Format and prettify JSON text
 - Easy-to-read output with proper indentation
+- Support large JSON text processing
+- Real-time formatting
 
 ## Getting Started
 
 ### Prerequisites
 - Rust 1.75.0 or later
 - Cargo package manager
+- Windows 10/11 (for Windows builds)
 
 ### Installation
 
+#### From Source
 1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/dev-tool.git
@@ -35,34 +40,63 @@ cd dev-tool
 cargo build --release
 ```
 
-3. Run the application
-```bash
-cargo run --release
-```
+3. Find the executable
+- Windows: `target/release/dev-tool.exe`
+- Linux/macOS: `target/release/dev-tool`
+
+#### Direct Download
+You can download the pre-built binaries from the [Releases](https://github.com/yourusername/dev-tool/releases) page.
+
+## Usage
+
+### Timestamp Converter
+1. Enter a timestamp in the input field
+2. Click "Unix时间戳转换" for Unix timestamp conversion
+3. Click "毫秒时间戳转换" for millisecond timestamp conversion
+4. Use "获取当前时间戳" to get the current timestamp
+5. The converted result will appear in the output field
+
+### JSON Formatter
+1. Paste your JSON text into the input area
+2. Click "格式化JSON" button
+3. The formatted JSON will appear in the output area with proper indentation
 
 ## Project Structure
 
 ```
 dev-tool/
 ├── src/
-│   ├── gui/
-│   │   ├── components/
-│   │   │   ├── styled_button.slint
-│   │   │   ├── single_line_edit.slint
-│   │   │   ├── timestamp_panel.slint
-│   │   │   └── json_panel.slint
-│   │   └── main.slint
-│   ├── modules/
-│   │   ├── timestamp.rs
-│   │   ├── json_formatter.rs
-│   │   └── mod.rs
-│   ├── handlers/
-│   │   ├── timestamp_handler.rs
-│   │   ├── json_handler.rs
-│   │   └── mod.rs
-│   └── main.rs
-└── Cargo.toml
+│   ├── gui/                # GUI related code
+│   │   ├── components/     # UI components
+│   │   │   ├── styled_button.slint    # Custom button component
+│   │   │   ├── single_line_edit.slint # Single line input component
+│   │   │   ├── timestamp_panel.slint  # Timestamp conversion panel
+│   │   │   └── json_panel.slint       # JSON formatting panel
+│   │   └── main.slint      # Main interface
+│   ├── modules/            # Feature modules
+│   │   ├── timestamp.rs    # Timestamp processing
+│   │   ├── json_formatter.rs # JSON formatting
+│   │   └── mod.rs         # Module exports
+│   ├── handlers/          # Event handlers
+│   │   ├── timestamp_handler.rs # Timestamp event handler
+│   │   ├── json_handler.rs     # JSON event handler
+│   │   └── mod.rs        # Handler exports
+│   └── main.rs           # Program entry
+├── resources/           # Application resources
+│   └── app.manifest    # Windows manifest file
+└── Cargo.toml         # Project configuration
 ```
+
+## Development
+
+### Building for Windows
+The Windows build automatically configures:
+- No console window when running
+- Proper application manifest
+- Windows-style GUI application
+
+### Building for Linux/macOS
+Standard Rust build process applies.
 
 ## Contributing
 

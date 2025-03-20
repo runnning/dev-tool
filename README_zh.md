@@ -11,19 +11,24 @@
 - 毫秒时间戳转换为可读日期时间
 - 获取当前 Unix 时间戳
 - 获取当前毫秒时间戳
+- 支持清晰的输入输出格式
 
 ### JSON 美化
 - 格式化和美化 JSON 文本
 - 带有适当缩进的易读输出
+- 支持大型 JSON 文本处理
+- 实时格式化
 
 ## 快速开始
 
 ### 环境要求
 - Rust 1.75.0 或更高版本
 - Cargo 包管理器
+- Windows 10/11（Windows 版本）
 
 ### 安装步骤
 
+#### 从源码安装
 1. 克隆仓库
 ```bash
 git clone https://github.com/yourusername/dev-tool.git
@@ -35,10 +40,26 @@ cd dev-tool
 cargo build --release
 ```
 
-3. 运行应用
-```bash
-cargo run --release
-```
+3. 找到可执行文件
+- Windows: `target/release/dev-tool.exe`
+- Linux/macOS: `target/release/dev-tool`
+
+#### 直接下载
+你可以从[发布页面](https://github.com/yourusername/dev-tool/releases)下载预编译的二进制文件。
+
+## 使用说明
+
+### 时间戳转换
+1. 在输入框中输入时间戳
+2. 点击"Unix时间戳转换"进行 Unix 时间戳转换
+3. 点击"毫秒时间戳转换"进行毫秒时间戳转换
+4. 使用"获取当前时间戳"获取当前时间戳
+5. 转换结果将显示在输出框中
+
+### JSON 美化
+1. 将 JSON 文本粘贴到输入区域
+2. 点击"格式化JSON"按钮
+3. 格式化后的 JSON 将在输出区域显示，并带有适当的缩进
 
 ## 项目结构
 
@@ -61,8 +82,21 @@ dev-tool/
 │   │   ├── json_handler.rs     # JSON 事件处理
 │   │   └── mod.rs        # 处理器导出
 │   └── main.rs           # 程序入口
-└── Cargo.toml           # 项目配置文件
+├── resources/           # 应用资源
+│   └── app.manifest    # Windows 清单文件
+└── Cargo.toml         # 项目配置文件
 ```
+
+## 开发说明
+
+### Windows 构建
+Windows 构建自动配置：
+- 运行时无控制台窗口
+- 正确的应用程序清单
+- Windows 风格的 GUI 应用程序
+
+### Linux/macOS 构建
+遵循标准的 Rust 构建流程。
 
 ## 参与贡献
 
