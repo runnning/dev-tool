@@ -130,7 +130,7 @@ export component MainWindow inherits Window {
             
             VerticalBox {
                 padding: 16px;
-                spacing: 12px;
+                spacing: 16px;
                 
                 SingleLineEdit {
                     text <=> root.timestamp-input;
@@ -138,33 +138,37 @@ export component MainWindow inherits Window {
                     background: #ffffff;
                 }
 
-                HorizontalBox {
-                    spacing: 8px;
-                    alignment: center;
-                    StyledButton {
-                        text: "获取当前时间戳";
-                        clicked => { root.get-current-timestamp(); }
-                        width: 160px;
-                    }
-                    StyledButton {
-                        text: "获取毫秒时间戳";
-                        clicked => { root.get-current-ms-timestamp(); }
-                        width: 160px;
-                    }
-                }
+                VerticalBox {
+                    spacing: 12px;
 
-                HorizontalBox {
-                    spacing: 8px;
-                    alignment: center;
-                    StyledButton {
-                        text: "Unix时间戳转换";
-                        clicked => { root.convert-timestamp(); }
-                        width: 160px;
+                    HorizontalBox {
+                        spacing: 12px;
+                        alignment: center;
+                        StyledButton {
+                            text: "获取当前时间戳";
+                            clicked => { root.get-current-timestamp(); }
+                            width: 160px;
+                        }
+                        StyledButton {
+                            text: "获取毫秒时间戳";
+                            clicked => { root.get-current-ms-timestamp(); }
+                            width: 160px;
+                        }
                     }
-                    StyledButton {
-                        text: "毫秒时间戳转换";
-                        clicked => { root.convert-ms-timestamp(); }
-                        width: 160px;
+
+                    HorizontalBox {
+                        spacing: 12px;
+                        alignment: center;
+                        StyledButton {
+                            text: "Unix时间戳转换";
+                            clicked => { root.convert-timestamp(); }
+                            width: 160px;
+                        }
+                        StyledButton {
+                            text: "毫秒时间戳转换";
+                            clicked => { root.convert-ms-timestamp(); }
+                            width: 160px;
+                        }
                     }
                 }
 
