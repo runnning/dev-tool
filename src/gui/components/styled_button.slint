@@ -1,0 +1,26 @@
+export component StyledButton {
+    in property <bool> enabled: true;
+    in property <bool> pressed;
+    in property <string> text;
+    callback clicked();
+
+    Rectangle {
+        height: 32px;
+        border-radius: 4px;
+        background: pressed ? #1565C0 : enabled ? #2196F3 : #BDBDBD;
+
+        TouchArea {
+            clicked => { root.clicked(); }
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+                text: root.text;
+                color: #ffffff;
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+} 
