@@ -1,6 +1,6 @@
-import { Button, TextEdit, VerticalBox, HorizontalBox, GroupBox } from "std-widgets.slint";
-import { StyledButton } from "components/styled_button.slint";
-import { SingleLineEdit } from "components/single_line_edit.slint";
+import { VerticalBox } from "std-widgets.slint";
+import { TimestampPanel } from "components/timestamp_panel.slint";
+import { JsonPanel } from "components/json_panel.slint";
 
 export component MainWindow inherits Window {
     title: "开发者工具";
@@ -22,113 +22,19 @@ export component MainWindow inherits Window {
         padding: 16px;
         spacing: 16px;
 
-        GroupBox {
-            title: "时间戳转换";
-            vertical-stretch: 0;
-            
-            VerticalBox {
-                padding: 16px;
-                spacing: 16px;
-                
-                SingleLineEdit {
-                    text <=> root.timestamp-input;
-                    placeholder-text: "输入时间戳...";
-                    background: #ffffff;
-                }
-
-                VerticalBox {
-                    spacing: 12px;
-
-                    HorizontalBox {
-                        spacing: 12px;
-                        alignment: center;
-                        StyledButton {
-                            text: "获取当前时间戳";
-                            clicked => { root.get-current-timestamp(); }
-                            width: 160px;
-                        }
-                        StyledButton {
-                            text: "获取毫秒时间戳";
-                            clicked => { root.get-current-ms-timestamp(); }
-                            width: 160px;
-                        }
-                    }
-
-                    HorizontalBox {
-                        spacing: 12px;
-                        alignment: center;
-                        StyledButton {
-                            text: "Unix时间戳转换";
-                            clicked => { root.convert-timestamp(); }
-                            width: 160px;
-                        }
-                        StyledButton {
-                            text: "毫秒时间戳转换";
-                            clicked => { root.convert-ms-timestamp(); }
-                            width: 160px;
-                        }
-                    }
-                }
-
-                SingleLineEdit {
-                    text <=> root.timestamp-output;
-                    read-only: true;
-                    background: #F5F5F5;
-                }
-            }
+        TimestampPanel {
+            input <=> root.timestamp-input;
+            output <=> root.timestamp-output;
+            convert-timestamp => { root.convert-timestamp(); }
+            convert-ms-timestamp => { root.convert-ms-timestamp(); }
+            get-current-timestamp => { root.get-current-timestamp(); }
+            get-current-ms-timestamp => { root.get-current-ms-timestamp(); }
         }
         
-        GroupBox {
-            title: "JSON美化";
-            vertical-stretch: 1;
-            
-            VerticalBox {
-                padding: 16px;
-                spacing: 12px;
-                
-                Rectangle {
-                    vertical-stretch: 1;
-                    background: #ffffff;
-                    border-width: 1px;
-                    border-color: #E0E0E0;
-                    border-radius: 4px;
-
-                    TextEdit {
-                        text <=> root.json-input;
-                        placeholder-text: "输入JSON文本...";
-                        font-size: 14px;
-                        width: parent.width;
-                        height: parent.height;
-                        wrap: word-wrap;
-                    }
-                }
-
-                HorizontalBox {
-                    alignment: center;
-                    StyledButton {
-                        text: "格式化JSON";
-                        clicked => { root.format-json(); }
-                        width: 160px;
-                    }
-                }
-
-                Rectangle {
-                    vertical-stretch: 1;
-                    background: #F5F5F5;
-                    border-width: 1px;
-                    border-color: #E0E0E0;
-                    border-radius: 4px;
-
-                    TextEdit {
-                        text <=> root.json-output;
-                        read-only: true;
-                        font-size: 14px;
-                        width: parent.width;
-                        height: parent.height;
-                        wrap: word-wrap;
-                    }
-                }
-            }
+        JsonPanel {
+            input <=> root.json-input;
+            output <=> root.json-output;
+            format-json => { root.format-json(); }
         }
     }
 }
