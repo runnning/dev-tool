@@ -1,11 +1,10 @@
 #![windows_subsystem = "windows"]
 
-use slint::*;
-
-mod modules;
 mod handlers;
+mod modules;
 
 use handlers::*;
+use slint::{include_modules, PlatformError};
 
 include_modules!();
 
