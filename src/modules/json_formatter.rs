@@ -6,7 +6,7 @@ use crate::MainWindow;
 pub fn format_json_async(window: Weak<MainWindow>, input: String) {
     thread::spawn(move || {
         // 添加延迟以确保 UI 能显示处理中的状态
-        std::thread::sleep(std::time::Duration::from_millis(50));
+        thread::sleep(std::time::Duration::from_millis(50));
 
         let result = match serde_json::from_str::<Value>(&input) {
             Ok(json) => {
