@@ -16,8 +16,9 @@ A collection of handy tools for developers built with Rust and Slint.
 ### JSON Formatter
 - Format and prettify JSON text
 - Easy-to-read output with proper indentation
-- Support large JSON text processing
-- Real-time formatting
+- Support large JSON text processing with async handling
+- Real-time formatting with progress indication
+- Non-blocking UI during large JSON processing
 
 ## Getting Started
 
