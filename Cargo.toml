@@ -1,0 +1,13 @@
+[package]
+name = "dev-tool"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+slint = { version = "1.6.0", features = ["std"] }
+serde_json = "1.0"
+chrono = "0.4"
+anyhow = "1.0"
+
+[build-dependencies]
+slint-build = "1.6.0"

@@ -1,0 +1,232 @@
+import { Button, TextEdit, VerticalBox, HorizontalBox, GroupBox } from "std-widgets.slint";
+
+component Card inherits Rectangle {
+    in property <string> title;
+    in property <bool> fill-height: false;
+
+    background: #ffffff;
+    border-radius: 12px;
+    drop-shadow-color: #00000015;
+    drop-shadow-offset-x: 0px;
+    drop-shadow-offset-y: 2px;
+    drop-shadow-blur: 8px;
+    vertical-stretch: fill-height ? 1 : 0;
+    padding: 20px;
+
+    VerticalBox {
+        spacing: 16px;
+        alignment: start;
+
+        Text {
+            text: root.title;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1976D2;
+        }
+
+        @children
+    }
+}
+
+component StyledButton {
+    in property <bool> enabled: true;
+    in property <bool> pressed;
+    in property <string> text;
+    callback clicked();
+
+    Rectangle {
+        height: 32px;
+        border-radius: 4px;
+        background: pressed ? #1565C0 : enabled ? #2196F3 : #BDBDBD;
+
+        TouchArea {
+            clicked => { root.clicked(); }
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+                text: root.text;
+                color: #ffffff;
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+component StyledTextEdit {
+    in-out property <string> text;
+    in property <bool> read-only;
+    in property <string> placeholder-text;
+
+    TextEdit {
+        text <=> root.text;
+        read-only: root.read-only;
+        placeholder-text: root.placeholder-text;
+        height: 32px;
+        font-size: 14px;
+    }
+}
+
+component SingleLineEdit {
+    in-out property <string> text;
+    in property <bool> read-only;
+    in property <string> placeholder-text;
+    in property <brush> background;
+
+    Rectangle {
+        height: 36px;
+        background: root.background;
+        border-width: 1px;
+        border-color: #E0E0E0;
+        border-radius: 4px;
+        clip: true;
+
+        if text == "" && !read-only: Text {
+            x: 8px;
+            color: #9E9E9E;
+            text: root.placeholder-text;
+            font-size: 14px;
+            vertical-alignment: center;
+            height: parent.height;
+        }
+
+        TextInput {
+            x: 8px;
+            width: parent.width - 16px;
+            height: parent.height;
+            text <=> root.text;
+            read-only: root.read-only;
+            font-size: 14px;
+            vertical-alignment: center;
+        }
+    }
+}
+
+export component MainWindow inherits Window {
+    title: "开发者工具";
+    min-width: 800px;
+    min-height: 600px;
+    
+    in-out property <string> timestamp-input: "";
+    in-out property <string> timestamp-output: "";
+    in-out property <string> json-input: "";
+    in-out property <string> json-output: "";
+    
+    callback convert-timestamp();
+    callback convert-ms-timestamp();
+    callback format-json();
+    callback get-current-timestamp();
+    callback get-current-ms-timestamp();
+    
+    VerticalBox {
+        padding: 16px;
+        spacing: 16px;
+
+        GroupBox {
+            title: "时间戳转换";
+            vertical-stretch: 0;
+            
+            VerticalBox {
+                padding: 16px;
+                spacing: 12px;
+                
+                SingleLineEdit {
+                    text <=> root.timestamp-input;
+                    placeholder-text: "输入时间戳...";
+                    background: #ffffff;
+                }
+
+                HorizontalBox {
+                    spacing: 8px;
+                    alignment: center;
+                    StyledButton {
+                        text: "获取当前时间戳";
+                        clicked => { root.get-current-timestamp(); }
+                        width: 160px;
+                    }
+                    StyledButton {
+                        text: "获取毫秒时间戳";
+                        clicked => { root.get-current-ms-timestamp(); }
+                        width: 160px;
+                    }
+                }
+
+                HorizontalBox {
+                    spacing: 8px;
+                    alignment: center;
+                    StyledButton {
+                        text: "Unix时间戳转换";
+                        clicked => { root.convert-timestamp(); }
+                        width: 160px;
+                    }
+                    StyledButton {
+                        text: "毫秒时间戳转换";
+                        clicked => { root.convert-ms-timestamp(); }
+                        width: 160px;
+                    }
+                }
+
+                SingleLineEdit {
+                    text <=> root.timestamp-output;
+                    read-only: true;
+                    background: #F5F5F5;
+                }
+            }
+        }
+        
+        GroupBox {
+            title: "JSON美化";
+            vertical-stretch: 1;
+            
+            VerticalBox {
+                padding: 16px;
+                spacing: 12px;
+                
+                Rectangle {
+                    vertical-stretch: 1;
+                    background: #ffffff;
+                    border-width: 1px;
+                    border-color: #E0E0E0;
+                    border-radius: 4px;
+
+                    TextEdit {
+                        text <=> root.json-input;
+                        placeholder-text: "输入JSON文本...";
+                        font-size: 14px;
+                        width: parent.width;
+                        height: parent.height;
+                        wrap: word-wrap;
+                    }
+                }
+
+                HorizontalBox {
+                    alignment: center;
+                    StyledButton {
+                        text: "格式化JSON";
+                        clicked => { root.format-json(); }
+                        width: 160px;
+                    }
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+                    background: #F5F5F5;
+                    border-width: 1px;
+                    border-color: #E0E0E0;
+                    border-radius: 4px;
+
+                    TextEdit {
+                        text <=> root.json-output;
+                        read-only: true;
+                        font-size: 14px;
+                        width: parent.width;
+                        height: parent.height;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+        }
+    }
+}
