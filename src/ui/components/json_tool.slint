@@ -1,5 +1,5 @@
-import { VerticalBox, HorizontalBox } from "std-widgets.slint";
-import { Label, CustomButton, CustomTextEdit } from "./common.slint";
+import { VerticalBox, HorizontalBox, GroupBox, TextEdit } from "std-widgets.slint";
+import { Colors, Fonts, Styles } from "../themes/mod.slint";
 
 export component JsonToolComponent {
     in-out property <string> input: "";
@@ -8,34 +8,64 @@ export component JsonToolComponent {
     callback format-json();
     callback minify-json();
 
-    VerticalBox {
-        spacing: 16px;
-        
-        Label { text: "输入JSON："; }
-        
-        CustomTextEdit { 
-            text <=> root.input;
-            placeholder-text: "请输入要处理的JSON";
-        }
-        
-        HorizontalBox {
-            spacing: 16px;
-            alignment: center;
-            CustomButton { 
-                text: "格式化";
-                clicked => { root.format-json() }
+    Rectangle {
+        background: Colors.surface;
+        border-radius: Styles.radius-normal;
+        drop-shadow-offset-x: 0px;
+        drop-shadow-offset-y: 2px;
+        drop-shadow-blur: 4px;
+        drop-shadow-color: rgba(0, 0, 0, 0.1);
+
+        VerticalBox {
+            padding: Styles.spacing-normal;
+            spacing: Styles.spacing-normal;
+
+            GroupBox {
+                title: "输入JSON";
+                VerticalBox {
+                    spacing: Styles.spacing-small;
+                    
+                    TextEdit { 
+                        text <=> root.input;
+                        placeholder-text: "请输入要处理的JSON";
+                        font-size: Fonts.size-normal;
+                        font-family: Fonts.monospace;
+                        height: 200px;
+                    }
+
+                    HorizontalBox {
+                        alignment: end;
+                        spacing: Styles.spacing-normal;
+
+                        Button { 
+                            text: "格式化";
+                            primary: true;
+                            clicked => { root.format-json() }
+                            width: 100px;
+                        }
+                        Button { 
+                            text: "压缩";
+                            clicked => { root.minify-json() }
+                            width: 100px;
+                        }
+                    }
+                }
             }
-            CustomButton { 
-                text: "压缩";
-                clicked => { root.minify-json() }
+
+            GroupBox {
+                title: "输出结果";
+                VerticalBox {
+                    spacing: Styles.spacing-small;
+                    
+                    TextEdit { 
+                        text <=> root.output;
+                        read-only: true;
+                        font-size: Fonts.size-normal;
+                        font-family: Fonts.monospace;
+                        height: 200px;
+                    }
+                }
             }
-        }
-        
-        Label { text: "输出："; }
-        
-        CustomTextEdit { 
-            text <=> root.output;
-            read-only: true;
         }
     }
 } 

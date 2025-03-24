@@ -29,7 +29,7 @@ export global AppLogic {
 
 export component MainWindow inherits Window {
     title: "开发工具集";
-    background: white;
+    background: Colors.background;
     min-width: 800px;
     min-height: 600px;
     
@@ -48,40 +48,53 @@ export component MainWindow inherits Window {
     callback format-json(string);
     callback minify-json(string);
 
-    VerticalBox {
+    Rectangle {
+        background: Colors.background;
+        padding: Styles.spacing-normal;
+
         TabWidget {
             Tab {
                 title: "时间工具";
-                TimeToolComponent {
-                    current-time: root.current-time;
-                    result: root.result;
-                    request-current-time => {
-                        root.request-current-time()
-                    }
-                    convert-timestamp(input) => {
-                        root.convert-timestamp(input)
-                    }
-                    convert-ms-timestamp(input) => {
-                        root.convert-ms-timestamp(input)
-                    }
-                    convert-to-timestamp(input) => {
-                        root.convert-to-timestamp(input)
-                    }
-                    convert-to-ms-timestamp(input) => {
-                        root.convert-to-ms-timestamp(input)
+                VerticalBox {
+                    padding: Styles.spacing-normal;
+                    spacing: Styles.spacing-normal;
+
+                    TimeToolComponent {
+                        current-time: root.current-time;
+                        result: root.result;
+                        request-current-time => {
+                            root.request-current-time()
+                        }
+                        convert-timestamp(input) => {
+                            root.convert-timestamp(input)
+                        }
+                        convert-ms-timestamp(input) => {
+                            root.convert-ms-timestamp(input)
+                        }
+                        convert-to-timestamp(input) => {
+                            root.convert-to-timestamp(input)
+                        }
+                        convert-to-ms-timestamp(input) => {
+                            root.convert-to-ms-timestamp(input)
+                        }
                     }
                 }
             }
 
             Tab {
                 title: "JSON工具";
-                JsonToolComponent {
-                    output: root.output;
-                    format-json(input) => {
-                        root.format-json(input)
-                    }
-                    minify-json(input) => {
-                        root.minify-json(input)
+                VerticalBox {
+                    padding: Styles.spacing-normal;
+                    spacing: Styles.spacing-normal;
+
+                    JsonToolComponent {
+                        output: root.output;
+                        format-json(input) => {
+                            root.format-json(input)
+                        }
+                        minify-json(input) => {
+                            root.minify-json(input)
+                        }
                     }
                 }
             }

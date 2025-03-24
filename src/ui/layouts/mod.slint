@@ -15,7 +15,10 @@ export component Card {
     Rectangle {
         background: root.background;
         border-radius: Styles.radius-normal;
-        drop-shadow-color: Styles.shadow-normal;
+        drop-shadow-offset-x: 0px;
+        drop-shadow-offset-y: 2px;
+        drop-shadow-blur: 4px;
+        drop-shadow-color: rgba(0, 0, 0, 0.1);
         padding: root.card-padding;
 
         VerticalBox {
@@ -39,6 +42,7 @@ export component ToolLayout {
 
     Card {
         title: root.title;
+        background: Colors.surface;
 
         VerticalBox {
             spacing: Styles.spacing-normal;
