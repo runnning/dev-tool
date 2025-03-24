@@ -1,14 +1,5 @@
-import { Button, TextEdit, VerticalBox, HorizontalBox } from "std-widgets.slint";
-
-component Label {
-    in property <string> text;
-    min-height: 24px;
-    min-width: 100px;
-    Text {
-        text: root.text;
-        color: black;
-    }
-}
+import { VerticalBox, HorizontalBox } from "std-widgets.slint";
+import { Label, CustomButton, CustomTextEdit } from "./common.slint";
 
 export component JsonToolComponent {
     in-out property <string> input: "";
@@ -18,13 +9,33 @@ export component JsonToolComponent {
     callback minify-json();
 
     VerticalBox {
+        spacing: 16px;
+        
         Label { text: "输入JSON："; }
-        TextEdit { text: input; height: 200px; }
-        HorizontalBox {
-            Button { text: "格式化"; clicked => { format-json() } }
-            Button { text: "压缩"; clicked => { minify-json() } }
+        
+        CustomTextEdit { 
+            text <=> root.input;
+            placeholder-text: "请输入要处理的JSON";
         }
+        
+        HorizontalBox {
+            spacing: 16px;
+            alignment: center;
+            CustomButton { 
+                text: "格式化";
+                clicked => { root.format-json() }
+            }
+            CustomButton { 
+                text: "压缩";
+                clicked => { root.minify-json() }
+            }
+        }
+        
         Label { text: "输出："; }
-        TextEdit { text: output; height: 200px; }
+        
+        CustomTextEdit { 
+            text <=> root.output;
+            read-only: true;
+        }
     }
 } 

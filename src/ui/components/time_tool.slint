@@ -1,14 +1,5 @@
-import { Button, LineEdit, VerticalBox, HorizontalBox, GroupBox } from "std-widgets.slint";
-
-component Label {
-    in property <string> text;
-    min-height: 24px;
-    min-width: 100px;
-    Text {
-        text: root.text;
-        color: black;
-    }
-}
+import { LineEdit, VerticalBox, HorizontalBox, GroupBox } from "std-widgets.slint";
+import { Label, CustomButton } from "./common.slint";
 
 export component TimeToolComponent {
     in-out property <string> current-time: "";
@@ -22,54 +13,100 @@ export component TimeToolComponent {
     callback convert-to-ms-timestamp(string);
 
     VerticalBox {
+        spacing: 16px;
+
         GroupBox {
             title: "当前时间";
             VerticalBox {
-                Label { text: "当前时间："; }
+                spacing: 8px;
                 HorizontalBox {
-                    LineEdit { text: current-time; }
-                    Button { text: "获取"; clicked => { request-current-time() } }
+                    spacing: 8px;
+                    alignment: space-between;
+                    LineEdit { 
+                        text: current-time;
+                        width: 300px;
+                    }
+                    CustomButton { 
+                        text: "获取当前时间";
+                        clicked => { root.request-current-time() }
+                    }
                 }
             }
         }
 
         GroupBox {
-            title: "时间戳转换";
+            title: "时间转换";
             VerticalBox {
-                Label { text: "秒级时间戳："; }
-                HorizontalBox {
-                    LineEdit { text: timestamp-input; }
-                    Button { text: "转换"; clicked => { convert-timestamp(timestamp-input) } }
-                }
-                Label { text: "结果："; }
-                LineEdit { text: result; }
-            }
-        }
+                spacing: 16px;
 
-        GroupBox {
-            title: "毫秒时间戳转换";
-            VerticalBox {
-                Label { text: "毫秒时间戳："; }
-                HorizontalBox {
-                    LineEdit { text: timestamp-input; }
-                    Button { text: "转换"; clicked => { convert-ms-timestamp(timestamp-input) } }
+                // 秒级时间戳转换
+                VerticalBox {
+                    spacing: 8px;
+                    Label { text: "秒级时间戳转换："; }
+                    HorizontalBox {
+                        spacing: 8px;
+                        LineEdit { 
+                            text: timestamp-input;
+                            width: 300px;
+                            placeholder-text: "请输入秒级时间戳";
+                        }
+                        CustomButton { 
+                            text: "转换";
+                            clicked => { root.convert-timestamp(root.timestamp-input) }
+                        }
+                    }
                 }
-                Label { text: "结果："; }
-                LineEdit { text: result; }
-            }
-        }
 
-        GroupBox {
-            title: "日期时间转换";
-            VerticalBox {
-                Label { text: "日期时间："; }
-                HorizontalBox {
-                    LineEdit { text: timestamp-input; }
-                    Button { text: "转秒级时间戳"; clicked => { convert-to-timestamp(timestamp-input) } }
-                    Button { text: "转毫秒时间戳"; clicked => { convert-to-ms-timestamp(timestamp-input) } }
+                // 毫秒级时间戳转换
+                VerticalBox {
+                    spacing: 8px;
+                    Label { text: "毫秒级时间戳转换："; }
+                    HorizontalBox {
+                        spacing: 8px;
+                        LineEdit { 
+                            text: timestamp-input;
+                            width: 300px;
+                            placeholder-text: "请输入毫秒级时间戳";
+                        }
+                        CustomButton { 
+                            text: "转换";
+                            clicked => { root.convert-ms-timestamp(root.timestamp-input) }
+                        }
+                    }
                 }
-                Label { text: "结果："; }
-                LineEdit { text: result; }
+
+                // 日期时间转换
+                VerticalBox {
+                    spacing: 8px;
+                    Label { text: "日期时间转换："; }
+                    HorizontalBox {
+                        spacing: 8px;
+                        LineEdit { 
+                            text: timestamp-input;
+                            width: 300px;
+                            placeholder-text: "输入格式：YYYY-MM-DD HH:mm:ss";
+                        }
+                        CustomButton { 
+                            text: "转秒级";
+                            clicked => { root.convert-to-timestamp(root.timestamp-input) }
+                        }
+                        CustomButton { 
+                            text: "转毫秒级";
+                            clicked => { root.convert-to-ms-timestamp(root.timestamp-input) }
+                        }
+                    }
+                }
+
+                // 转换结果
+                VerticalBox {
+                    spacing: 8px;
+                    Label { text: "转换结果："; }
+                    LineEdit { 
+                        text: result;
+                        width: 400px;
+                        read-only: true;
+                    }
+                }
             }
         }
     }
