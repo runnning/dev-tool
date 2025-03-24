@@ -1,0 +1,77 @@
+import { Colors } from "colors.slint";
+import { Fonts } from "fonts.slint";
+
+export global Styles {
+    // 间距
+    out property <length> spacing-tiny: 4px;
+    out property <length> spacing-small: 8px;
+    out property <length> spacing-normal: 16px;
+    out property <length> spacing-large: 24px;
+    out property <length> spacing-xlarge: 32px;
+
+    // 圆角
+    out property <length> radius-small: 4px;
+    out property <length> radius-normal: 8px;
+    out property <length> radius-large: 12px;
+
+    // 阴影
+    out property <drop-shadow> shadow-normal: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.1));
+    out property <drop-shadow> shadow-large: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15));
+
+    // 动画
+    out property <duration> animation-fast: 150ms;
+    out property <duration> animation-normal: 250ms;
+    out property <duration> animation-slow: 350ms;
+    out property <easing> animation-easing: ease;
+}
+
+// 按钮样式
+export component Button {
+    in property <string> text;
+    in property <bool> primary: false;
+    callback clicked <=> touch.clicked;
+
+    states [
+        pressed when touch.pressed: {
+            background: Colors.primary-dark;
+        }
+        hover when touch.has-hover: {
+            background: Colors.primary-light;
+        }
+    ]
+
+    Rectangle {
+        background: primary ? Colors.primary : Colors.background;
+        border-radius: Styles.radius-normal;
+        drop-shadow: Styles.shadow-normal;
+
+        Text {
+            text: root.text;
+            color: primary ? Colors.background : Colors.text;
+            font-size: Fonts.size-normal;
+            font-weight: Fonts.weight-medium;
+        }
+
+        touch := TouchArea { }
+    }
+}
+
+// 输入框样式
+export component Input {
+    in property <string> placeholder;
+    in-out property <string> text;
+
+    Rectangle {
+        background: Colors.background;
+        border: 1px solid Colors.border;
+        border-radius: Styles.radius-normal;
+        padding: Styles.spacing-small;
+
+        TextInput {
+            text <=> root.text;
+            placeholder-text: root.placeholder;
+            font-size: Fonts.size-normal;
+            color: Colors.text;
+        }
+    }
+} 

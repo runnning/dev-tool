@@ -1,0 +1,133 @@
+import { Button, LineEdit, VerticalBox, HorizontalBox, GroupBox, TextEdit } from "std-widgets.slint";
+import { Colors, Fonts, Styles } from "../themes/mod.slint";
+import { ToolLayout } from "../layouts/mod.slint";
+
+export component TimeToolComponent {
+    in-out property <string> current-time: "";
+    in-out property <string> result: "";
+
+    callback request-current-time();
+    callback convert-timestamp(string);
+    callback convert-ms-timestamp(string);
+    callback convert-to-timestamp(string);
+    callback convert-to-ms-timestamp(string);
+
+    ToolLayout {
+//        title: "时间工具";
+//        description: "时间戳与日期时间互转";
+
+        HorizontalBox {
+            alignment: center;
+            Button {
+                text: "获取当前时间";
+                clicked => { root.request-current-time() }
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            Text {
+                text: "当前时间：" + root.current-time;
+                font-size: Fonts.size-normal;
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            LineEdit {
+                width: 300px;
+                height: 32px;
+                placeholder-text: "请输入秒级时间戳";
+                accepted(text) => { root.convert-timestamp(text) }
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            LineEdit {
+                width: 300px;
+                height: 32px;
+                placeholder-text: "请输入毫秒时间戳";
+                accepted(text) => { root.convert-ms-timestamp(text) }
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            LineEdit {
+                width: 300px;
+                height: 32px;
+                placeholder-text: "请输入日期时间 (YYYY-MM-DD HH:mm:ss)";
+                accepted(text) => { root.convert-to-timestamp(text) }
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            Text {
+                text: "结果：" + root.result;
+                font-size: Fonts.size-normal;
+            }
+        }
+    }
+}
+
+export component JsonToolComponent {
+    in-out property <string> output: "";
+    in-out property <string> input: "";
+
+    callback format-json(string);
+    callback minify-json(string);
+
+    ToolLayout {
+        title: "JSON工具";
+        description: "JSON格式化与压缩";
+
+        VerticalBox {
+            alignment: center;
+            spacing: 16px;
+
+            Text {
+                text: "输入JSON";
+                horizontal-alignment: center;
+            }
+
+            TextEdit {
+                height: 240px;
+                width: 500px;
+                text <=> root.input;
+            }
+
+            HorizontalBox {
+                alignment: center;
+                spacing: 16px;
+
+                Button {
+                    text: "格式化";
+                    width: 100px;
+                    height: 32px;
+                    clicked => { root.format-json(root.input) }
+                }
+
+                Button {
+                    text: "压缩";
+                    width: 100px;
+                    height: 32px;
+                    clicked => { root.minify-json(root.input) }
+                }
+            }
+
+            Text {
+                text: "输出结果";
+                horizontal-alignment: center;
+            }
+
+            TextEdit {
+                height: 240px;
+                width: 500px;
+                read-only: true;
+                text: root.output;
+            }
+        }
+    }
+} 

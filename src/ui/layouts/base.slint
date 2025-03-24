@@ -1,0 +1,61 @@
+import { Colors } from "../themes/colors.slint";
+import { Styles } from "../themes/styles.slint";
+
+// 卡片布局
+export component Card {
+    in property <string> title;
+    in property <brush> background: Colors.surface;
+    in property <length> padding: Styles.spacing-normal;
+
+    Rectangle {
+        background: root.background;
+        border-radius: Styles.radius-normal;
+        drop-shadow: Styles.shadow-normal;
+        padding: root.padding;
+
+        VerticalLayout {
+            spacing: Styles.spacing-normal;
+
+            if root.title != "" : Text {
+                text: root.title;
+                font-size: Fonts.size-large;
+                font-weight: Fonts.weight-medium;
+                color: Colors.text;
+            }
+
+            @children
+        }
+    }
+}
+
+// 工具布局
+export component ToolLayout {
+    in property <string> title;
+    in property <string> description;
+
+    Card {
+        title: root.title;
+
+        VerticalLayout {
+            spacing: Styles.spacing-normal;
+
+            if root.description != "" : Text {
+                text: root.description;
+                color: Colors.text-secondary;
+            }
+
+            @children
+        }
+    }
+}
+
+// 分割线
+export component Divider {
+    in property <brush> color: Colors.divider;
+    in property <length> thickness: 1px;
+
+    Rectangle {
+        height: root.thickness;
+        background: root.color;
+    }
+} 

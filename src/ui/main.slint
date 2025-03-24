@@ -1,0 +1,90 @@
+import { Button, TabWidget, VerticalBox } from "std-widgets.slint";
+import { TimeToolComponent } from "./components/mod.slint";
+import { JsonToolComponent } from "./components/mod.slint";
+import { Colors, Fonts, Styles } from "./themes/mod.slint";
+
+export struct Theme {
+    primary: brush,
+    text: brush,
+    background: brush,
+}
+
+export global Themes {
+    out property <Theme> current: {
+        primary: #2196F3,
+        text: #000000,
+        background: #FFFFFF,
+    };
+}
+
+export global AppLogic {
+    callback request-current-time();
+    callback convert-timestamp(string);
+    callback convert-ms-timestamp(string);
+    callback convert-to-timestamp(string);
+    callback convert-to-ms-timestamp(string);
+    callback format-json(string);
+    callback minify-json(string);
+}
+
+export component MainWindow inherits Window {
+    title: "开发工具集";
+    background: white;
+    min-width: 800px;
+    min-height: 600px;
+    
+    // 时间工具属性
+    in-out property <string> current-time: "";
+    in-out property <string> result: "";
+    
+    // JSON工具属性
+    in-out property <string> output: "";
+
+    callback request-current-time();
+    callback convert-timestamp(string);
+    callback convert-ms-timestamp(string);
+    callback convert-to-timestamp(string);
+    callback convert-to-ms-timestamp(string);
+    callback format-json(string);
+    callback minify-json(string);
+
+    VerticalBox {
+        TabWidget {
+            Tab {
+                title: "时间工具";
+                TimeToolComponent {
+                    current-time: root.current-time;
+                    result: root.result;
+                    request-current-time => {
+                        root.request-current-time()
+                    }
+                    convert-timestamp(input) => {
+                        root.convert-timestamp(input)
+                    }
+                    convert-ms-timestamp(input) => {
+                        root.convert-ms-timestamp(input)
+                    }
+                    convert-to-timestamp(input) => {
+                        root.convert-to-timestamp(input)
+                    }
+                    convert-to-ms-timestamp(input) => {
+                        root.convert-to-ms-timestamp(input)
+                    }
+                }
+            }
+
+            Tab {
+                title: "JSON工具";
+                JsonToolComponent {
+                    output: root.output;
+                    format-json(input) => {
+                        root.format-json(input)
+                    }
+                    minify-json(input) => {
+                        root.minify-json(input)
+                    }
+                }
+            }
+        }
+    }
+}

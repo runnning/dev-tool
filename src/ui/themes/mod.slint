@@ -1,0 +1,78 @@
+// 颜色主题
+export global Colors {
+    // 主色调
+    out property <brush> primary: #007AFF;
+    out property <brush> primary-light: #3395FF;
+    out property <brush> primary-dark: #0056B3;
+
+    // 背景色
+    out property <brush> background: #FFFFFF;
+    out property <brush> background-alt: #F5F5F5;
+    out property <brush> surface: #FFFFFF;
+
+    // 文本颜色
+    out property <brush> text: #333333;
+    out property <brush> text-secondary: #666666;
+    out property <brush> text-disabled: #999999;
+
+    // 边框颜色
+    out property <brush> border: #E0E0E0;
+    out property <brush> divider: #E0E0E0;
+
+    // 状态颜色
+    out property <brush> success: #4CAF50;
+    out property <brush> warning: #FFC107;
+    out property <brush> error: #F44336;
+    out property <brush> info: #2196F3;
+}
+
+// 字体主题
+export global Fonts {
+    // 字体家族
+    out property <string> primary: "Microsoft YaHei";
+    out property <string> secondary: "SimSun";
+    out property <string> monospace: "Consolas";
+
+    // 字体大小
+    out property <length> size-tiny: 12px;
+    out property <length> size-small: 14px;
+    out property <length> size-normal: 16px;
+    out property <length> size-large: 18px;
+    out property <length> size-xlarge: 20px;
+    out property <length> size-xxlarge: 24px;
+
+    // 字体粗细
+    out property <int> weight-light: 300;
+    out property <int> weight-regular: 400;
+    out property <int> weight-medium: 500;
+    out property <int> weight-bold: 700;
+
+    // 行高
+    out property <length> line-height-compact: 1.2px;
+    out property <length> line-height-normal: 1.5px;
+    out property <length> line-height-relaxed: 1.8px;
+}
+
+// 样式主题
+export global Styles {
+    // 间距
+    out property <length> spacing-tiny: 4px;
+    out property <length> spacing-small: 8px;
+    out property <length> spacing-normal: 16px;
+    out property <length> spacing-large: 24px;
+    out property <length> spacing-xlarge: 32px;
+
+    // 圆角
+    out property <length> radius-small: 4px;
+    out property <length> radius-normal: 8px;
+    out property <length> radius-large: 12px;
+
+    // 阴影
+    out property <brush> shadow-normal: #00000019;
+    out property <brush> shadow-large: #00000026;
+
+    // 动画
+    out property <duration> animation-fast: 150ms;
+    out property <duration> animation-normal: 250ms;
+    out property <duration> animation-slow: 350ms;
+} 

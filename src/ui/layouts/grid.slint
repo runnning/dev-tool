@@ -1,0 +1,41 @@
+import { Styles } from "../themes/styles.slint";
+
+// 网格布局
+export component GridLayout {
+    in property <length> spacing: Styles.spacing-normal;
+    in property <length> column-width: 300px;
+    in property <length> row-height: 200px;
+
+    GridBox {
+        spacing: root.spacing;
+        spacing-uniform: true;
+        preferred-width: root.column-width;
+        preferred-height: root.row-height;
+
+        @children
+    }
+}
+
+// 网格项
+export component GridItem {
+    in property <string> title;
+    in property <string> description;
+
+    VerticalLayout {
+        spacing: Styles.spacing-small;
+
+        if root.title != "" : Text {
+            text: root.title;
+            font-size: Fonts.size-normal;
+            font-weight: Fonts.weight-medium;
+        }
+
+        if root.description != "" : Text {
+            text: root.description;
+            font-size: Fonts.size-small;
+            color: Colors.text-secondary;
+        }
+
+        @children
+    }
+} 

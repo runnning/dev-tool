@@ -1,19 +1,11 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod handlers;
-mod modules;
+use dev_tool::{MainWindow, logic::event::EventHandler};
+use slint::ComponentHandle;
 
-use handlers::*;
-use slint::{include_modules, PlatformError};
-
-include_modules!();
-
-fn main() -> Result<(), PlatformError> {
-    let main_window = MainWindow::new()?;
-
-    // 设置事件处理器
-    TimestampHandler::setup(&main_window);
-    JsonHandler::setup(&main_window);
-
-    main_window.run()
+fn main() {
+    let window = MainWindow::new().unwrap();
+    let event_handler = EventHandler::new(window.as_weak());
+    event_handler.init();
+    window.run().unwrap();
 }

@@ -1,0 +1,35 @@
+import { Button, VerticalBox, TextEdit } from "std-widgets.slint";
+import { Colors, Fonts, Styles } from "./themes/mod.slint";
+import { TimeToolComponent, JsonToolComponent } from "./components/mod.slint";
+
+export component MainWindow {
+    in-out property <string> current_time: "";
+    in-out property <string> result: "";
+    in-out property <string> output: "";
+
+    callback request_current_time();
+    callback convert_timestamp(string);
+    callback convert_ms_timestamp(string);
+    callback convert_to_timestamp(string);
+    callback convert_to_ms_timestamp(string);
+    callback format_json(string);
+    callback minify_json(string);
+
+    VerticalBox {
+        TimeToolComponent {
+            current-time: root.current_time;
+            result: root.result;
+            request-current-time => { root.request_current_time() }
+            convert-timestamp(input) => { root.convert_timestamp(input) }
+            convert-ms-timestamp(input) => { root.convert_ms_timestamp(input) }
+            convert-to-timestamp(input) => { root.convert_to_timestamp(input) }
+            convert-to-ms-timestamp(input) => { root.convert_to_ms_timestamp(input) }
+        }
+
+        JsonToolComponent {
+            output: root.output;
+            format-json(input) => { root.format_json(input) }
+            minify-json(input) => { root.minify_json(input) }
+        }
+    }
+} 

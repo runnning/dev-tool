@@ -1,0 +1,30 @@
+import { Button, TextEdit, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+component Label {
+    in property <string> text;
+    min-height: 24px;
+    min-width: 100px;
+    Text {
+        text: root.text;
+        color: black;
+    }
+}
+
+export component JsonToolComponent {
+    in-out property <string> input: "";
+    in-out property <string> output: "";
+
+    callback format-json();
+    callback minify-json();
+
+    VerticalBox {
+        Label { text: "输入JSON："; }
+        TextEdit { text: input; height: 200px; }
+        HorizontalBox {
+            Button { text: "格式化"; clicked => { format-json() } }
+            Button { text: "压缩"; clicked => { minify-json() } }
+        }
+        Label { text: "输出："; }
+        TextEdit { text: output; height: 200px; }
+    }
+} 

@@ -1,0 +1,76 @@
+import { Button, LineEdit, VerticalBox, HorizontalBox, GroupBox } from "std-widgets.slint";
+
+component Label {
+    in property <string> text;
+    min-height: 24px;
+    min-width: 100px;
+    Text {
+        text: root.text;
+        color: black;
+    }
+}
+
+export component TimeToolComponent {
+    in-out property <string> current-time: "";
+    in-out property <string> timestamp-input: "";
+    in-out property <string> result: "";
+
+    callback request-current-time();
+    callback convert-timestamp(string);
+    callback convert-ms-timestamp(string);
+    callback convert-to-timestamp(string);
+    callback convert-to-ms-timestamp(string);
+
+    VerticalBox {
+        GroupBox {
+            title: "当前时间";
+            VerticalBox {
+                Label { text: "当前时间："; }
+                HorizontalBox {
+                    LineEdit { text: current-time; }
+                    Button { text: "获取"; clicked => { request-current-time() } }
+                }
+            }
+        }
+
+        GroupBox {
+            title: "时间戳转换";
+            VerticalBox {
+                Label { text: "秒级时间戳："; }
+                HorizontalBox {
+                    LineEdit { text: timestamp-input; }
+                    Button { text: "转换"; clicked => { convert-timestamp(timestamp-input) } }
+                }
+                Label { text: "结果："; }
+                LineEdit { text: result; }
+            }
+        }
+
+        GroupBox {
+            title: "毫秒时间戳转换";
+            VerticalBox {
+                Label { text: "毫秒时间戳："; }
+                HorizontalBox {
+                    LineEdit { text: timestamp-input; }
+                    Button { text: "转换"; clicked => { convert-ms-timestamp(timestamp-input) } }
+                }
+                Label { text: "结果："; }
+                LineEdit { text: result; }
+            }
+        }
+
+        GroupBox {
+            title: "日期时间转换";
+            VerticalBox {
+                Label { text: "日期时间："; }
+                HorizontalBox {
+                    LineEdit { text: timestamp-input; }
+                    Button { text: "转秒级时间戳"; clicked => { convert-to-timestamp(timestamp-input) } }
+                    Button { text: "转毫秒时间戳"; clicked => { convert-to-ms-timestamp(timestamp-input) } }
+                }
+                Label { text: "结果："; }
+                LineEdit { text: result; }
+            }
+        }
+    }
+} 
