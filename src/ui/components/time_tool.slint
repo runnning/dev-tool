@@ -1,4 +1,4 @@
-import { LineEdit, VerticalBox, HorizontalBox, GroupBox, ComboBox } from "std-widgets.slint";
+import { LineEdit, VerticalBox, HorizontalBox, GroupBox, ComboBox, CheckBox } from "std-widgets.slint";
 import { Label, CustomButton } from "./common.slint";
 import { Colors } from "../themes/colors.slint";
 import { Fonts } from "../themes/fonts.slint";
@@ -9,6 +9,7 @@ export struct TimeFormat {
 }
 
 export component TimeToolComponent {
+    // 属性定义
     in-out property <string> current-time: "";
     in-out property <string> result: "";
     in-out property <string> time-format: "%Y-%m-%d %H:%M:%S";
@@ -16,42 +17,49 @@ export component TimeToolComponent {
         "YYYY-MM-DD HH:mm:ss",
         "YYYY/MM/DD HH:mm:ss",
         "YYYY年MM月DD日 HH:mm:ss",
+        "YYYY@MM@DD HH:mm:ss",
         "YYYY-MM-DD",
         "YYYY/MM/DD",
         "YYYY年MM月DD日",
+        "YYYY@MM@DD",
         "HH:mm:ss",
         "HH:mm",
         "YYYY-MM-DD HH:mm",
         "YYYY/MM/DD HH:mm",
+        "YYYY@MM@DD HH:mm",
         "MM-DD HH:mm",
         "MM/DD HH:mm",
-        "YYYY-MM-DD HH:mm:ss.SSS"
+        "MM@DD HH:mm",
+        "YYYY-MM-DD HH:mm:ss.SSS",
+        "YYYY@MM@DD HH:mm:ss.SSS"
     ];
     in-out property <[string]> format-values: [
         "%Y-%m-%d %H:%M:%S",
         "%Y/%m/%d %H:%M:%S",
         "%Y年%m月%d日 %H:%M:%S",
+        "%Y@%m@%d %H:%M:%S",
         "%Y-%m-%d",
         "%Y/%m/%d",
         "%Y年%m月%d日",
+        "%Y@%m@%d",
         "%H:%M:%S",
         "%H:%M",
         "%Y-%m-%d %H:%M",
         "%Y/%m/%d %H:%M",
+        "%Y@%m@%d %H:%M",
         "%m-%d %H:%M",
         "%m/%d %H:%M",
-        "%Y-%m-%d %H:%M:%S.%3f"
+        "%m@%d %H:%M",
+        "%Y-%m-%d %H:%M:%S.%3f",
+        "%Y@%m@%d %H:%M:%S.%3f"
     ];
-    private property <int> current-format-index: 0;
+    // 时间格式使用 %Y-%m-%d %H:%M:%S，对应的索引是0
+    in-out property <int> current-format-index: 0;
 
     callback request-current-time();
     callback convert-to-timestamp(string);
     callback convert-to-ms-timestamp(string);
     callback time-format-changed(string);
-
-    init => {
-        // 初始化操作（可根据需要保留）
-    }
 
     VerticalBox {
         spacing: 16px;
@@ -68,14 +76,14 @@ export component TimeToolComponent {
                             text: "选择格式：";
                         }
                         ComboBox {
-                            current-index: root.current-format-index;
+                            current-index <=> root.current-format-index;
                             width: 300px;
                             model: root.format-texts;
-                            selected => {
-                                root.current-format-index = self.current-index;
-                                root.time-format = root.format-values[self.current-index];
-                                root.time-format-changed(root.time-format);
-                            }
+                        }
+                        Text {
+                            text: "格式含义：如 2023-04-01 15:30:45";
+                            font-size: Fonts.size-small;
+                            color: Colors.text-secondary;
                         }
                     }
                 }
@@ -110,10 +118,23 @@ export component TimeToolComponent {
                 VerticalBox {
                     spacing: 8px;
                     Label { text: "日期时间转换："; }
-                    Text {
-                        text: "请按照格式 \"" + root.format-texts[root.current-format-index] + "\" 输入";
-                        font-size: Fonts.size-small;
-                        color: Colors.text-secondary;
+                    VerticalBox {
+                        spacing: 4px;
+                        Text {
+                            text: "当前选择格式: " + root.format-texts[root.current-format-index] + 
+                                  (root.current-format-index <= 3 ? " (请输入完整日期时间，如2023-04-01 15:30:45)" :
+                                   root.current-format-index >= 4 && root.current-format-index <= 7 ? " (请只输入日期，如2023-04-01)" :
+                                   root.current-format-index >= 8 && root.current-format-index <= 9 ? " (请只输入时间，如15:30:45)" :
+                                   root.current-format-index >= 10 && root.current-format-index <= 15 ? " (请输入日期和时间，如2023-04-01 15:30)" :
+                                   " (请输入完整日期时间，如2023-04-01 15:30:45.123)");
+                            font-size: Fonts.size-small;
+                            color: Colors.text;
+                        }
+                        Text {
+                            text: "当前实际使用的格式: \"" + root.time-format + "\"";
+                            font-size: Fonts.size-small;
+                            color: Colors.text-secondary;
+                        }
                     }
                     HorizontalBox {
                         spacing: 8px;
@@ -121,7 +142,7 @@ export component TimeToolComponent {
                         LineEdit { 
                             text <=> parent.datetime-input;
                             width: 300px;
-                            placeholder-text: "例如：2023-04-01 12:30:45";
+                            placeholder-text: "按所选格式输入日期时间";
                         }
                         CustomButton { 
                             text: "转秒级";

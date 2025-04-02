@@ -24,6 +24,7 @@ export global AppLogic {
     callback format-json(string);
     callback minify-json(string);
     callback time-format-changed(string);
+    callback current-format-index-changed(int);
 }
 
 export component MainWindow inherits Window {
@@ -35,7 +36,8 @@ export component MainWindow inherits Window {
     // 时间工具属性
     in-out property <string> current-time: "";
     in-out property <string> result: "";
-    in-out property <string> time-format: "YYYY-MM-DD HH:mm:ss";
+    in-out property <string> time-format: "%Y-%m-%d %H:%M:%S";
+    in-out property <int> current-format-index: 0;
     
     // JSON工具属性
     in-out property <string> output: "";
@@ -46,7 +48,8 @@ export component MainWindow inherits Window {
     callback format-json(string);
     callback minify-json(string);
     callback time-format-changed(string);
-
+    callback current-format-index-changed(int);
+    
     Rectangle {
         background: Colors.background;
         padding: Styles.spacing-normal;
@@ -61,7 +64,8 @@ export component MainWindow inherits Window {
                     TimeToolComponent {
                         current-time: root.current-time;
                         result: root.result;
-                        time-format <=> root.time-format;
+                        time-format: root.time-format;
+                        current-format-index <=> root.current-format-index;
                         request-current-time => { root.request-current-time() }
                         convert-to-timestamp(input) => { root.convert-to-timestamp(input) }
                         convert-to-ms-timestamp(input) => { root.convert-to-ms-timestamp(input) }
@@ -84,6 +88,12 @@ export component MainWindow inherits Window {
                 }
             }
         }
+    }
+
+    // 在窗口初始化时，自动触发格式更新
+    init => {
+        // 设置默认格式
+        current-format-index-changed(current-format-index);
     }
 }
 

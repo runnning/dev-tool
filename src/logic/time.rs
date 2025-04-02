@@ -51,8 +51,8 @@ impl TimeLogic {
         
         let format = self.time_format.borrow().clone();
         match time::datetime_to_timestamp_with_format(datetime, &format) {
-            Ok(result) => result.to_string(),
-            Err(e) => format!("转换失败: {}。请按格式 {} 输入", e, format)
+            Ok(result) => format!("秒级时间戳: {}", result),
+            Err(e) => format!("转换失败: {}。请按格式 \"{}\" 输入", e, format)
         }
     }
 
@@ -63,8 +63,8 @@ impl TimeLogic {
         
         let format = self.time_format.borrow().clone();
         match time::datetime_to_ms_timestamp_with_format(datetime, &format) {
-            Ok(result) => result.to_string(),
-            Err(e) => format!("转换失败: {}。请按格式 {} 输入", e, format)
+            Ok(result) => format!("毫秒级时间戳: {}", result),
+            Err(e) => format!("转换失败: {}。请按格式 \"{}\" 输入", e, format)
         }
     }
 
