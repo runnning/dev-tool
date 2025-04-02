@@ -1,5 +1,6 @@
 import { Colors } from "../themes/colors.slint";
 import { Styles } from "../themes/styles.slint";
+import { Fonts } from "../themes/fonts.slint";
 
 // 卡片布局
 export component Card {
@@ -13,7 +14,7 @@ export component Card {
         drop-shadow: Styles.shadow-normal;
         padding: root.padding;
 
-        VerticalLayout {
+        VerticalBox {
             spacing: Styles.spacing-normal;
 
             if root.title != "" : Text {
@@ -36,7 +37,7 @@ export component ToolLayout {
     Card {
         title: root.title;
 
-        VerticalLayout {
+        VerticalBox {
             spacing: Styles.spacing-normal;
 
             if root.description != "" : Text {

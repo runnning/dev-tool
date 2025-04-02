@@ -1,19 +1,86 @@
-import { LineEdit, VerticalBox, HorizontalBox, GroupBox } from "std-widgets.slint";
+import { LineEdit, VerticalBox, HorizontalBox, GroupBox, ComboBox } from "std-widgets.slint";
 import { Label, CustomButton } from "./common.slint";
+import { Colors } from "../themes/colors.slint";
+import { Fonts } from "../themes/fonts.slint";
+
+export struct TimeFormat {
+    text: string,
+    value: string,
+}
 
 export component TimeToolComponent {
     in-out property <string> current-time: "";
-    in-out property <string> timestamp-input: "";
     in-out property <string> result: "";
+    in-out property <string> time-format: "%Y-%m-%d %H:%M:%S";
+    in-out property <[string]> format-texts: [
+        "YYYY-MM-DD HH:mm:ss",
+        "YYYY/MM/DD HH:mm:ss",
+        "YYYY年MM月DD日 HH:mm:ss",
+        "YYYY-MM-DD",
+        "YYYY/MM/DD",
+        "YYYY年MM月DD日",
+        "HH:mm:ss",
+        "HH:mm",
+        "YYYY-MM-DD HH:mm",
+        "YYYY/MM/DD HH:mm",
+        "MM-DD HH:mm",
+        "MM/DD HH:mm",
+        "YYYY-MM-DD HH:mm:ss.SSS"
+    ];
+    in-out property <[string]> format-values: [
+        "%Y-%m-%d %H:%M:%S",
+        "%Y/%m/%d %H:%M:%S",
+        "%Y年%m月%d日 %H:%M:%S",
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+        "%Y年%m月%d日",
+        "%H:%M:%S",
+        "%H:%M",
+        "%Y-%m-%d %H:%M",
+        "%Y/%m/%d %H:%M",
+        "%m-%d %H:%M",
+        "%m/%d %H:%M",
+        "%Y-%m-%d %H:%M:%S.%3f"
+    ];
+    private property <int> current-format-index: 0;
 
     callback request-current-time();
-    callback convert-timestamp(string);
-    callback convert-ms-timestamp(string);
     callback convert-to-timestamp(string);
     callback convert-to-ms-timestamp(string);
+    callback time-format-changed(string);
+
+    init => {
+        // 初始化操作（可根据需要保留）
+    }
 
     VerticalBox {
         spacing: 16px;
+
+        GroupBox {
+            title: "时间格式";
+            VerticalBox {
+                spacing: 8px;
+                HorizontalBox {
+                    spacing: 16px;
+                    VerticalBox {
+                        alignment: start;
+                        Label {
+                            text: "选择格式：";
+                        }
+                        ComboBox {
+                            current-index: root.current-format-index;
+                            width: 300px;
+                            model: root.format-texts;
+                            selected => {
+                                root.current-format-index = self.current-index;
+                                root.time-format = root.format-values[self.current-index];
+                                root.time-format-changed(root.time-format);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         GroupBox {
             title: "当前时间";
@@ -39,60 +106,30 @@ export component TimeToolComponent {
             VerticalBox {
                 spacing: 16px;
 
-                // 秒级时间戳转换
-                VerticalBox {
-                    spacing: 8px;
-                    Label { text: "秒级时间戳转换："; }
-                    HorizontalBox {
-                        spacing: 8px;
-                        LineEdit { 
-                            text: timestamp-input;
-                            width: 300px;
-                            placeholder-text: "请输入秒级时间戳";
-                        }
-                        CustomButton { 
-                            text: "转换";
-                            clicked => { root.convert-timestamp(root.timestamp-input) }
-                        }
-                    }
-                }
-
-                // 毫秒级时间戳转换
-                VerticalBox {
-                    spacing: 8px;
-                    Label { text: "毫秒级时间戳转换："; }
-                    HorizontalBox {
-                        spacing: 8px;
-                        LineEdit { 
-                            text: timestamp-input;
-                            width: 300px;
-                            placeholder-text: "请输入毫秒级时间戳";
-                        }
-                        CustomButton { 
-                            text: "转换";
-                            clicked => { root.convert-ms-timestamp(root.timestamp-input) }
-                        }
-                    }
-                }
-
                 // 日期时间转换
                 VerticalBox {
                     spacing: 8px;
                     Label { text: "日期时间转换："; }
+                    Text {
+                        text: "请按照格式 \"" + root.format-texts[root.current-format-index] + "\" 输入";
+                        font-size: Fonts.size-small;
+                        color: Colors.text-secondary;
+                    }
                     HorizontalBox {
                         spacing: 8px;
+                        property <string> datetime-input: "";
                         LineEdit { 
-                            text: timestamp-input;
+                            text <=> parent.datetime-input;
                             width: 300px;
-                            placeholder-text: "输入格式：YYYY-MM-DD HH:mm:ss";
+                            placeholder-text: "例如：2023-04-01 12:30:45";
                         }
                         CustomButton { 
                             text: "转秒级";
-                            clicked => { root.convert-to-timestamp(root.timestamp-input) }
+                            clicked => { root.convert-to-timestamp(parent.datetime-input) }
                         }
                         CustomButton { 
                             text: "转毫秒级";
-                            clicked => { root.convert-to-ms-timestamp(root.timestamp-input) }
+                            clicked => { root.convert-to-ms-timestamp(parent.datetime-input) }
                         }
                     }
                 }

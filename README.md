@@ -8,8 +8,8 @@ A collection of development tools built with Rust and Slint.
 
 - Time Tool
   - Get current time
-  - Convert between timestamp and datetime
-  - Support both seconds and milliseconds timestamp
+  - Convert datetime to timestamp (seconds and milliseconds)
+  - Support multiple time formats
 - JSON Tool
   - Format JSON
   - Minify JSON
@@ -21,6 +21,25 @@ A collection of development tools built with Rust and Slint.
 - History Records
   - Save history by tool type
   - Support history clearing
+
+## Recent Updates
+
+### 2024 Update
+
+- **UI Improvements**:
+  - Replaced custom list with standard ComboBox for better time format selection
+  - Simplified the Time Tool interface by removing redundant features
+  - Enhanced error messages with more detailed format conversion error reasons
+  
+- **Feature Enhancements**:
+  - Removed timestamp to datetime conversion to focus on datetime to timestamp
+  - Improved time format validation logic with support for more formats
+  - Enhanced datetime conversion logic with friendlier error feedback
+
+- **Code Structure**:
+  - Refactored TimeLogic and JsonLogic classes for better internal structure
+  - Optimized event handling logic for simplified code flow
+  - Improved code documentation and comments
 
 ## Getting Started
 

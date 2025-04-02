@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
     pub theme: String,
     pub language: String,
@@ -20,6 +20,7 @@ impl Default for Config {
     }
 }
 
+#[derive(Clone)]
 pub struct ConfigService {
     config_path: PathBuf,
 }

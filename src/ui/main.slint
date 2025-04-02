@@ -1,4 +1,4 @@
-import { Button, TabWidget, VerticalBox } from "std-widgets.slint";
+import { TabWidget, VerticalBox } from "std-widgets.slint";
 import { TimeToolComponent } from "./components/mod.slint";
 import { JsonToolComponent } from "./components/mod.slint";
 import { Colors, Fonts, Styles } from "./themes/mod.slint";
@@ -19,12 +19,11 @@ export global Themes {
 
 export global AppLogic {
     callback request-current-time();
-    callback convert-timestamp(string);
-    callback convert-ms-timestamp(string);
     callback convert-to-timestamp(string);
     callback convert-to-ms-timestamp(string);
     callback format-json(string);
     callback minify-json(string);
+    callback time-format-changed(string);
 }
 
 export component MainWindow inherits Window {
@@ -36,17 +35,17 @@ export component MainWindow inherits Window {
     // 时间工具属性
     in-out property <string> current-time: "";
     in-out property <string> result: "";
+    in-out property <string> time-format: "YYYY-MM-DD HH:mm:ss";
     
     // JSON工具属性
     in-out property <string> output: "";
 
     callback request-current-time();
-    callback convert-timestamp(string);
-    callback convert-ms-timestamp(string);
     callback convert-to-timestamp(string);
     callback convert-to-ms-timestamp(string);
     callback format-json(string);
     callback minify-json(string);
+    callback time-format-changed(string);
 
     Rectangle {
         background: Colors.background;
@@ -62,21 +61,11 @@ export component MainWindow inherits Window {
                     TimeToolComponent {
                         current-time: root.current-time;
                         result: root.result;
-                        request-current-time => {
-                            root.request-current-time()
-                        }
-                        convert-timestamp(input) => {
-                            root.convert-timestamp(input)
-                        }
-                        convert-ms-timestamp(input) => {
-                            root.convert-ms-timestamp(input)
-                        }
-                        convert-to-timestamp(input) => {
-                            root.convert-to-timestamp(input)
-                        }
-                        convert-to-ms-timestamp(input) => {
-                            root.convert-to-ms-timestamp(input)
-                        }
+                        time-format <=> root.time-format;
+                        request-current-time => { root.request-current-time() }
+                        convert-to-timestamp(input) => { root.convert-to-timestamp(input) }
+                        convert-to-ms-timestamp(input) => { root.convert-to-ms-timestamp(input) }
+                        time-format-changed(format) => { root.time-format-changed(format) }
                     }
                 }
             }
@@ -89,12 +78,8 @@ export component MainWindow inherits Window {
 
                     JsonToolComponent {
                         output: root.output;
-                        format-json(input) => {
-                            root.format-json(input)
-                        }
-                        minify-json(input) => {
-                            root.minify-json(input)
-                        }
+                        format-json(input) => { root.format-json(input) }
+                        minify-json(input) => { root.minify-json(input) }
                     }
                 }
             }

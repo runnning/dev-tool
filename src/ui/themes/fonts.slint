@@ -14,12 +14,17 @@ export global Fonts {
 
     // 字体粗细
     out property <int> weight-light: 300;
-    out property <int> weight-regular: 400;
+    out property <int> weight-normal: 400;
     out property <int> weight-medium: 500;
+    out property <int> weight-semibold: 600;
     out property <int> weight-bold: 700;
 
+    // 字体系列
+    out property <string> family-sans: "Microsoft YaHei";
+    out property <string> family-mono: "Consolas";
+
     // 行高
-    out property <length> line-height-compact: 1.2;
-    out property <length> line-height-normal: 1.5;
-    out property <length> line-height-relaxed: 1.8;
+    out property <length> line-height-compact: 1.2 * 1px;
+    out property <length> line-height-normal: 1.5 * 1px;
+    out property <length> line-height-relaxed: 1.8 * 1px;
 } 

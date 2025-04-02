@@ -1,5 +1,7 @@
 pub mod time;
-pub mod json;
 pub mod event;
+pub mod json;
 
-pub use event::EventHandler; 
+pub use time::TimeLogic;
+pub use event::EventHandler;
+pub use json::JsonLogic; 

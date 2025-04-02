@@ -26,7 +26,7 @@ export global Styles {
 }
 
 // 按钮样式
-export component Button {
+export component CustomButton {
     in property <string> text;
     in property <bool> primary: false;
     callback clicked <=> touch.clicked;
@@ -57,7 +57,7 @@ export component Button {
 }
 
 // 输入框样式
-export component Input {
+export component CustomInput {
     in property <string> placeholder;
     in-out property <string> text;
 

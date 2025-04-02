@@ -1,16 +1,27 @@
 import { Styles } from "../themes/styles.slint";
+import { Colors } from "../themes/colors.slint";
+import { Fonts } from "../themes/fonts.slint";
+import { HorizontalBox, VerticalBox } from "std-widgets.slint";
 
 // 网格布局
 export component GridLayout {
     in property <length> spacing: Styles.spacing-normal;
-    in property <length> column-width: 1208px;
-    in property <length> row-height: 836px;
 
-    GridBox {
+    VerticalBox {
         spacing: root.spacing;
-        spacing-uniform: true;
-        preferred-width: root.column-width;
-        preferred-height: root.row-height;
+        alignment: start;
+
+        @children
+    }
+}
+
+// 网格行
+export component GridRow {
+    in property <length> spacing: Styles.spacing-normal;
+
+    HorizontalBox {
+        spacing: root.spacing;
+        alignment: start;
 
         @children
     }
@@ -21,16 +32,18 @@ export component GridItem {
     in property <string> title;
     in property <string> description;
 
-    VerticalLayout {
+    VerticalBox {
         spacing: Styles.spacing-small;
+        padding: Styles.spacing-small;
 
-        if root.title != "": Text {
+        if root.title != "" : Text {
             text: root.title;
             font-size: Fonts.size-normal;
             font-weight: Fonts.weight-medium;
+            color: Colors.text;
         }
 
-        if root.description != "": Text {
+        if root.description != "" : Text {
             text: root.description;
             font-size: Fonts.size-small;
             color: Colors.text-secondary;

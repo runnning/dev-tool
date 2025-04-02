@@ -4,8 +4,14 @@ use dev_tool::{MainWindow, logic::event::EventHandler};
 use slint::ComponentHandle;
 
 fn main() {
-    let window = MainWindow::new().unwrap();
-    let event_handler = EventHandler::new(window.as_weak());
-    event_handler.init();
-    window.run().unwrap();
+    let main_window = MainWindow::new().unwrap();
+    
+    // 创建事件处理器
+    let event_handler = EventHandler::new(main_window.as_weak());
+    
+    // 注册事件处理函数
+    event_handler.handle_events();
+    
+    // 运行应用程序
+    main_window.run().unwrap();
 }
