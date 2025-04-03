@@ -6,11 +6,9 @@ description = "开发工具集"
 
 [dependencies]
 slint = "1.4"
-i-slint-backend-selector = "1.4"
 chrono = "0.4"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-directories = "5.0"
 
 [build-dependencies]
 slint-build = "1.4"
