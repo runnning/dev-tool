@@ -11,10 +11,9 @@ pub struct EventHandler {
 
 impl EventHandler {
     pub fn new(window: Weak<MainWindow>) -> Self {
-        let window_clone = window.clone();
         Self {
             window: window.clone(),
-            time_logic: TimeLogic::new(window_clone),
+            time_logic: TimeLogic::new(),
             json_logic: JsonLogic::new(),
         }
     }
