@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local, NaiveDateTime};
+use chrono::{DateTime, Local, NaiveDateTime, Utc, FixedOffset, TimeZone};
 
 /// 获取所有支持的日期时间格式
 pub fn get_all_supported_formats() -> Vec<&'static str> {
@@ -133,6 +133,9 @@ fn parse_datetime_to_timestamp_internal(
     println!("输入分析: 看起来像日期={}, 看起来像时间={}, 看起来像完整日期时间={}", 
              looks_like_date_only, looks_like_time_only, looks_like_full_datetime);
     
+    // 创建东八区时区对象（北京时间，UTC+8）
+    let beijing_timezone = FixedOffset::east_opt(8 * 3600).unwrap();
+    
     // 1. 如果输入看起来像纯日期，尝试使用日期格式解析
     if looks_like_date_only {
         println!("输入看起来像纯日期，尝试用日期格式解析");
@@ -144,12 +147,15 @@ fn parse_datetime_to_timestamp_internal(
             Ok(date) => {
                 println!("成功解析为日期: {:?}", date);
                 let datetime = date.and_hms_opt(0, 0, 0).unwrap();
-                let local_dt = DateTime::<Local>::from_naive_utc_and_offset(datetime, *Local::now().offset());
+                
+                // 将日期时间视为北京时间，然后转换为UTC时间戳
+                let beijing_dt = beijing_timezone.from_local_datetime(&datetime).unwrap();
+                let utc_dt = beijing_dt.with_timezone(&Utc);
                 
                 let timestamp = if ms_precision {
-                    local_dt.timestamp() * 1000
+                    utc_dt.timestamp() * 1000
                 } else {
-                    local_dt.timestamp()
+                    utc_dt.timestamp()
                 };
                 
                 println!("转换为{}时间戳: {}", if ms_precision { "毫秒" } else { "" }, timestamp);
@@ -171,14 +177,18 @@ fn parse_datetime_to_timestamp_internal(
         match chrono::NaiveTime::parse_from_str(datetime_str, time_format) {
             Ok(time) => {
                 println!("成功解析为时间: {:?}", time);
+                // 对于纯时间，使用今天的日期
                 let today = Local::now().date_naive();
                 let datetime = today.and_time(time);
-                let local_dt = DateTime::<Local>::from_naive_utc_and_offset(datetime, *Local::now().offset());
+                
+                // 将日期时间视为北京时间，然后转换为UTC时间戳
+                let beijing_dt = beijing_timezone.from_local_datetime(&datetime).unwrap();
+                let utc_dt = beijing_dt.with_timezone(&Utc);
                 
                 let timestamp = if ms_precision {
-                    local_dt.timestamp() * 1000 + local_dt.timestamp_subsec_millis() as i64
+                    utc_dt.timestamp() * 1000 + utc_dt.timestamp_subsec_millis() as i64
                 } else {
-                    local_dt.timestamp()
+                    utc_dt.timestamp()
                 };
                 
                 println!("转换为{}时间戳: {}", if ms_precision { "毫秒" } else { "" }, timestamp);
@@ -202,12 +212,15 @@ fn parse_datetime_to_timestamp_internal(
             match NaiveDateTime::parse_from_str(datetime_str, possible_format) {
                 Ok(dt) => {
                     println!("成功解析为日期时间: {:?}", dt);
-                    let local_dt = DateTime::<Local>::from_naive_utc_and_offset(dt, *Local::now().offset());
+                    
+                    // 将日期时间视为北京时间，然后转换为UTC时间戳
+                    let beijing_dt = beijing_timezone.from_local_datetime(&dt).unwrap();
+                    let utc_dt = beijing_dt.with_timezone(&Utc);
                     
                     let timestamp = if ms_precision {
-                        local_dt.timestamp() * 1000 + local_dt.timestamp_subsec_millis() as i64
+                        utc_dt.timestamp() * 1000 + utc_dt.timestamp_subsec_millis() as i64
                     } else {
-                        local_dt.timestamp()
+                        utc_dt.timestamp()
                     };
                     
                     println!("转换为{}时间戳: {}", if ms_precision { "毫秒" } else { "" }, timestamp);
@@ -226,12 +239,15 @@ fn parse_datetime_to_timestamp_internal(
     match NaiveDateTime::parse_from_str(datetime_str, format) {
         Ok(dt) => {
             println!("成功解析为日期时间: {:?}", dt);
-            let local_dt = DateTime::<Local>::from_naive_utc_and_offset(dt, *Local::now().offset());
+            
+            // 将日期时间视为北京时间，然后转换为UTC时间戳
+            let beijing_dt = beijing_timezone.from_local_datetime(&dt).unwrap();
+            let utc_dt = beijing_dt.with_timezone(&Utc);
             
             let timestamp = if ms_precision {
-                local_dt.timestamp() * 1000 + local_dt.timestamp_subsec_millis() as i64
+                utc_dt.timestamp() * 1000 + utc_dt.timestamp_subsec_millis() as i64
             } else {
-                local_dt.timestamp()
+                utc_dt.timestamp()
             };
             
             println!("转换为{}时间戳: {}", if ms_precision { "毫秒" } else { "" }, timestamp);
