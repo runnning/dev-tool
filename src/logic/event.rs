@@ -1,7 +1,12 @@
-use slint::{Weak, SharedString};
+use slint::{Weak, SharedString, Timer};
 use crate::MainWindow;
 use crate::logic::time::TimeLogic;
 use crate::logic::json::JsonLogic;
+use std::thread;
+use std::sync::mpsc;
+use std::time::Instant;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 pub struct EventHandler {
     window: Weak<MainWindow>,
@@ -134,21 +139,191 @@ impl EventHandler {
         if let Some(window) = self.window.upgrade() {
             let json_logic = self.json_logic.clone();
             let window_weak = self.window.clone();
-            // JSON格式化
+            
+            // JSON格式化 - 使用异步处理
             window.on_format_json(move |input: SharedString| {
                 if let Some(window) = window_weak.upgrade() {
-                    let result = json_logic.format(&input);
-                    window.set_output(result.into());
+                    // 设置处理状态
+                    window.set_json_processing(true);
+                    
+                    // 处理空输入
+                    if input.is_empty() {
+                        window.set_output("请输入JSON内容".into());
+                        window.set_json_processing(false);
+                        return;
+                    }
+                    
+                    // 对于小型JSON，直接同步处理
+                    if input.len() < 5000 {
+                        let result = json_logic.format(&input);
+                        // 设置输出结果
+                        window.set_output(result.into());
+                        // 确保处理状态被重置
+                        window.set_json_processing(false);
+                        return;
+                    }
+                    
+                    // 提示用户处理中
+                    window.set_output("正在处理中，请稍候...".into());
+                    
+                    // 创建一个通道用于接收处理结果
+                    let (sender, receiver) = mpsc::channel();
+                    let input_str = input.to_string();
+                    
+                    // 在新线程中处理大型JSON
+                    thread::spawn(move || {
+                        let result = json_logic.format(&input_str);
+                        let _ = sender.send(result);
+                    });
+                    
+                    // 创建一个定时器来检查处理结果
+                    let window_check = window_weak.clone();
+                    let start_time = Instant::now();
+                    let processing_tick = Rc::new(RefCell::new(0));
+                    let processing_tick_clone = processing_tick.clone();
+                    
+                    // 每200毫秒更新一次处理状态显示
+                    Timer::default().start(
+                        slint::TimerMode::Repeated,
+                        std::time::Duration::from_millis(200),
+                        move || {
+                            if let Some(window) = window_check.upgrade() {
+                                // 尝试接收处理结果
+                                if let Ok(result) = receiver.try_recv() {
+                                    // 计算处理耗时
+                                    let elapsed = start_time.elapsed();
+                                    println!("JSON格式化总耗时: {:?}", elapsed);
+                                    
+                                    // 更新UI
+                                    window.set_output(result.into());
+                                    window.set_json_processing(false);
+                                    return;
+                                }
+                                
+                                // 更新进度消息，让用户知道处理仍在进行
+                                if window.get_json_processing() {
+                                    let mut counter = *processing_tick_clone.borrow();
+                                    counter = (counter + 1) % 4;
+                                    *processing_tick_clone.borrow_mut() = counter;
+                                    
+                                    let elapsed_secs = start_time.elapsed().as_secs();
+                                    let dots = ".".repeat(counter + 1);
+                                    let progress_msg = format!("正在处理中{}已用时{}秒", dots, elapsed_secs);
+                                    window.set_output(progress_msg.into());
+                                }
+                            }
+                        }
+                    );
+                    
+                    // 设置超时定时器
+                    let window_timeout = window_weak.clone();
+                    Timer::default().start(
+                        slint::TimerMode::SingleShot,
+                        std::time::Duration::from_secs(30), // 30秒超时
+                        move || {
+                            if let Some(window) = window_timeout.upgrade() {
+                                if window.get_json_processing() {
+                                    window.set_json_processing(false);
+                                    window.set_output("处理超时，JSON数据量可能过大或格式有误".into());
+                                }
+                            }
+                        }
+                    );
                 }
             });
 
             let json_logic = self.json_logic.clone();
             let window_weak = self.window.clone();
-            // JSON压缩
+            
+            // JSON压缩 - 使用异步处理
             window.on_minify_json(move |input: SharedString| {
                 if let Some(window) = window_weak.upgrade() {
-                    let result = json_logic.minify(&input);
-                    window.set_output(result.into());
+                    // 设置处理状态
+                    window.set_json_processing(true);
+                    
+                    // 处理空输入
+                    if input.is_empty() {
+                        window.set_output("请输入JSON内容".into());
+                        window.set_json_processing(false);
+                        return;
+                    }
+                    
+                    // 对于小型JSON，直接同步处理
+                    if input.len() < 5000 {
+                        let result = json_logic.minify(&input);
+                        // 设置输出结果
+                        window.set_output(result.into());
+                        // 确保处理状态被重置
+                        window.set_json_processing(false);
+                        return;
+                    }
+                    
+                    // 提示用户处理中
+                    window.set_output("正在处理中，请稍候...".into());
+                    
+                    // 创建一个通道用于接收处理结果
+                    let (sender, receiver) = mpsc::channel();
+                    let input_str = input.to_string();
+                    
+                    // 在新线程中处理大型JSON
+                    thread::spawn(move || {
+                        let result = json_logic.minify(&input_str);
+                        let _ = sender.send(result);
+                    });
+                    
+                    // 创建一个定时器来检查处理结果
+                    let window_check = window_weak.clone();
+                    let start_time = Instant::now();
+                    let processing_tick = Rc::new(RefCell::new(0));
+                    let processing_tick_clone = processing_tick.clone();
+                    
+                    // 每200毫秒更新一次处理状态显示
+                    Timer::default().start(
+                        slint::TimerMode::Repeated,
+                        std::time::Duration::from_millis(200),
+                        move || {
+                            if let Some(window) = window_check.upgrade() {
+                                // 尝试接收处理结果
+                                if let Ok(result) = receiver.try_recv() {
+                                    // 计算处理耗时
+                                    let elapsed = start_time.elapsed();
+                                    println!("JSON压缩总耗时: {:?}", elapsed);
+                                    
+                                    // 更新UI
+                                    window.set_output(result.into());
+                                    window.set_json_processing(false);
+                                    return;
+                                }
+                                
+                                // 更新进度消息，让用户知道处理仍在进行
+                                if window.get_json_processing() {
+                                    let mut counter = *processing_tick_clone.borrow();
+                                    counter = (counter + 1) % 4;
+                                    *processing_tick_clone.borrow_mut() = counter;
+                                    
+                                    let elapsed_secs = start_time.elapsed().as_secs();
+                                    let dots = ".".repeat(counter + 1);
+                                    let progress_msg = format!("正在处理中{}已用时{}秒", dots, elapsed_secs);
+                                    window.set_output(progress_msg.into());
+                                }
+                            }
+                        }
+                    );
+                    
+                    // 设置超时定时器
+                    let window_timeout = window_weak.clone();
+                    Timer::default().start(
+                        slint::TimerMode::SingleShot,
+                        std::time::Duration::from_secs(30), // 30秒超时
+                        move || {
+                            if let Some(window) = window_timeout.upgrade() {
+                                if window.get_json_processing() {
+                                    window.set_json_processing(false);
+                                    window.set_output("处理超时，JSON数据量可能过大或格式有误".into());
+                                }
+                            }
+                        }
+                    );
                 }
             });
         }

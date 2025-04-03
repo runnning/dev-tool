@@ -1,4 +1,5 @@
 use crate::utils::json;
+use std::sync::mpsc;
 
 #[derive(Clone, Copy)]
 pub struct JsonLogic;
@@ -16,5 +17,15 @@ impl JsonLogic {
     /// 压缩JSON字符串
     pub fn minify(&self, json_str: &str) -> String {
         json::minify_json(json_str)
+    }
+    
+    /// 异步格式化JSON字符串
+    pub fn format_async(&self, json_str: String) -> mpsc::Receiver<String> {
+        json::format_json_async(json_str)
+    }
+    
+    /// 异步压缩JSON字符串
+    pub fn minify_async(&self, json_str: String) -> mpsc::Receiver<String> {
+        json::minify_json_async(json_str)
     }
 } 

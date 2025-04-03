@@ -12,6 +12,7 @@ export component Label {
 
 export component CustomButton {
     in property <string> text;
+    in property <bool> enabled: true;
     callback clicked();
     
     Button {
@@ -19,6 +20,7 @@ export component CustomButton {
         width: 100px;
         height: 32px;
         clicked => { root.clicked() }
+        enabled: root.enabled;
     }
 }
 

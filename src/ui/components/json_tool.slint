@@ -1,11 +1,12 @@
-import { VerticalBox, HorizontalBox, GroupBox, TextEdit } from "std-widgets.slint";
+import { VerticalBox, HorizontalBox, GroupBox, TextEdit, ProgressIndicator } from "std-widgets.slint";
 import { Colors, Fonts, Styles } from "../themes/mod.slint";
 import { CustomButton } from "./common.slint";
 
 export component JsonToolComponent {
     in-out property <string> output: "";
     in-out property <string> input: "";
-
+    in-out property <bool> is-processing: false;
+    
     callback format-json(string);
     callback minify-json(string);
 
@@ -21,19 +22,42 @@ export component JsonToolComponent {
                     text <=> root.input;
                     font-size: Fonts.size-normal;
                     placeholder-text: "请输入要处理的JSON";
+                    enabled: !root.is-processing;
                 }
                 HorizontalBox {
                     alignment: end;
                     spacing: Styles.spacing-normal;
+                    
+                    // 添加占位元素，使按钮居右显示
+                    Rectangle {
+                        horizontal-stretch: 1;
+                    }
+                    
+                    // 处理中提示
+                    Text {
+                        text: "处理中...";
+                        color: Colors.primary;
+                        font-size: Fonts.size-small;
+                        horizontal-alignment: left;
+                        vertical-alignment: center;
+                        visible: root.is-processing;
+                    }
+                    
                     CustomButton {
                         text: "格式化";
-                        clicked => { root.format-json(root.input) }
+                        clicked => { 
+                            root.format-json(root.input);
+                        }
                         width: 100px;
+                        enabled: !root.is-processing && root.input != "";
                     }
                     CustomButton {
                         text: "压缩";
-                        clicked => { root.minify-json(root.input) }
+                        clicked => { 
+                            root.minify-json(root.input);
+                        }
                         width: 100px;
+                        enabled: !root.is-processing && root.input != "";
                     }
                 }
             }
@@ -43,11 +67,39 @@ export component JsonToolComponent {
             title: "输出结果";
             VerticalBox {
                 spacing: 8px;
+                
+                // 进度条容器 - 优化显示逻辑
+                Rectangle {
+                    height: 30px;
+                    background: root.is-processing ? Colors.background-alt : transparent;
+                    border-radius: 4px;
+                    visible: root.is-processing;
+                    
+                    HorizontalLayout {
+                        alignment: center;
+                        spacing: 10px;
+                        
+                        ProgressIndicator {
+                            width: 120px;
+                            height: 20px;
+                            indeterminate: true;
+                        }
+                        
+                        Text {
+                            text: "处理中...";
+                            color: Colors.primary;
+                            font-size: Fonts.size-normal;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+                
                 TextEdit {
                     height: 240px;
                     text <=> root.output;
                     read-only: true;
                     font-size: Fonts.size-normal;
+                    visible: !root.is-processing;
                 }
             }
         }

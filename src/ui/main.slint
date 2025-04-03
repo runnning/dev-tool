@@ -41,6 +41,7 @@ export component MainWindow inherits Window {
     
     // JSON工具属性
     in-out property <string> output: "";
+    in-out property <bool> json-processing: false;
 
     callback request-current-time();
     callback convert-to-timestamp(string);
@@ -49,6 +50,7 @@ export component MainWindow inherits Window {
     callback minify-json(string);
     callback time-format-changed(string);
     callback current-format-index-changed(int);
+    callback reset-json-processing-state();
     
     Rectangle {
         background: Colors.background;
@@ -82,6 +84,7 @@ export component MainWindow inherits Window {
 
                     JsonToolComponent {
                         output: root.output;
+                        is-processing: root.json-processing;
                         format-json(input) => { root.format-json(input) }
                         minify-json(input) => { root.minify-json(input) }
                     }
@@ -94,6 +97,11 @@ export component MainWindow inherits Window {
     init => {
         // 设置默认格式
         current-format-index-changed(current-format-index);
+    }
+    
+    // 重置JSON处理状态
+    public function invoke_reset_json_processing_state() {
+        self.json-processing = false;
     }
 }
 
