@@ -28,4 +28,14 @@ impl JsonLogic {
     pub fn minify_async(&self, json_str: String) -> mpsc::Receiver<String> {
         json::minify_json_async(json_str)
     }
+    
+    /// 带进度反馈的异步JSON格式化
+    pub fn format_with_progress(&self, json_str: String) -> mpsc::Receiver<json::ProcessUpdate> {
+        json::format_json_with_progress(json_str)
+    }
+    
+    /// 带进度反馈的异步JSON压缩
+    pub fn minify_with_progress(&self, json_str: String) -> mpsc::Receiver<json::ProcessUpdate> {
+        json::minify_json_with_progress(json_str)
+    }
 } 

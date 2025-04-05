@@ -6,9 +6,11 @@ export component JsonToolComponent {
     in-out property <string> output: "";
     in-out property <string> input: "";
     in-out property <bool> is-processing: false;
+    in-out property <int> progress: 0;  
     
     callback format-json(string);
     callback minify-json(string);
+    callback show-warning(string);
 
     VerticalBox {
         spacing: 16px;
@@ -17,23 +19,42 @@ export component JsonToolComponent {
             title: "输入JSON";
             VerticalBox {
                 spacing: 8px;
+                
+                Rectangle {
+                    height: 30px;
+                    background: Colors.primary-light;
+                    border-radius: 4px;
+                    
+                    HorizontalLayout {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        
+                        Text {
+                            text: "警告：粘贴大量数据可能导致程序卡顿，请分批处理";
+                            color: Colors.primary;
+                            font-size: Fonts.size-small;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+                
                 TextEdit {
                     height: 240px;
                     text <=> root.input;
                     font-size: Fonts.size-normal;
-                    placeholder-text: "请输入要处理的JSON";
+                    placeholder-text: "请输入要处理的JSON (为避免卡顿，建议单次处理不超过1MB)";
                     enabled: !root.is-processing;
                 }
+                
                 HorizontalBox {
                     alignment: end;
                     spacing: Styles.spacing-normal;
+                    height: 30px;
                     
-                    // 添加占位元素，使按钮居右显示
                     Rectangle {
                         horizontal-stretch: 1;
                     }
                     
-                    // 处理中提示
                     Text {
                         text: "处理中...";
                         color: Colors.primary;
@@ -51,6 +72,7 @@ export component JsonToolComponent {
                         width: 100px;
                         enabled: !root.is-processing && root.input != "";
                     }
+                    
                     CustomButton {
                         text: "压缩";
                         clicked => { 
@@ -68,28 +90,40 @@ export component JsonToolComponent {
             VerticalBox {
                 spacing: 8px;
                 
-                // 进度条容器 - 优化显示逻辑
                 Rectangle {
-                    height: 30px;
+                    height: 40px;
                     background: root.is-processing ? Colors.background-alt : transparent;
                     border-radius: 4px;
                     visible: root.is-processing;
                     
-                    HorizontalLayout {
-                        alignment: center;
-                        spacing: 10px;
+                    VerticalLayout {
+                        padding: 5px;
                         
-                        ProgressIndicator {
-                            width: 120px;
-                            height: 20px;
-                            indeterminate: true;
+                        HorizontalLayout {
+                            alignment: center;
+                            spacing: 10px;
+                            
+                            ProgressIndicator {
+                                width: 200px;
+                                height: 12px;
+                                progress: root.progress / 100;
+                                indeterminate: root.progress <= 0;
+                            }
+                            
+                            Text {
+                                text: root.progress > 0 ? root.progress + "%" : "处理中...";
+                                color: Colors.primary;
+                                font-size: Fonts.size-normal;
+                                vertical-alignment: center;
+                            }
                         }
                         
                         Text {
-                            text: "处理中...";
-                            color: Colors.primary;
-                            font-size: Fonts.size-normal;
-                            vertical-alignment: center;
+                            text: "处理大批量数据，请耐心等待...";
+                            color: Colors.primary-light;
+                            font-size: Fonts.size-small;
+                            horizontal-alignment: center;
+                            visible: root.progress > 0;
                         }
                     }
                 }

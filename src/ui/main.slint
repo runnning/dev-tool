@@ -42,6 +42,7 @@ export component MainWindow inherits Window {
     // JSON工具属性
     in-out property <string> output: "";
     in-out property <bool> json-processing: false;
+    in-out property <int> progress: 0;
 
     callback request-current-time();
     callback convert-to-timestamp(string);
@@ -50,6 +51,7 @@ export component MainWindow inherits Window {
     callback minify-json(string);
     callback time-format-changed(string);
     callback current-format-index-changed(int);
+    callback show-warning(string);
     callback reset-json-processing-state();
     
     Rectangle {
@@ -85,8 +87,10 @@ export component MainWindow inherits Window {
                     JsonToolComponent {
                         output: root.output;
                         is-processing: root.json-processing;
+                        progress: root.progress;
                         format-json(input) => { root.format-json(input) }
                         minify-json(input) => { root.minify-json(input) }
+                        show-warning(msg) => { root.show-warning(msg) }
                     }
                 }
             }
